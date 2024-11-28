@@ -1,0 +1,125 @@
+#include "Grille.h"
+
+
+Grille::Grille(int x, int y) : ligne(x), col(y) {
+    plateauJeu = new Cellule**[ligne];  
+    for (int i = 0; i < ligne; i++) {
+        plateauJeu[i] = new Cellule*[col];
+        for (int j = 0; j < col; j++) {
+            plateauJeu[i][j] = new Cellule();  
+        }
+    }
+
+}
+
+Grille::~Grille() {
+    for (int i = 0; i < ligne; i++) {
+        for (int j = 0; j < col; j++) {
+            delete plateauJeu[i][j];  
+        }
+        delete[] plateauJeu[i]; 
+    }
+    delete[] plateauJeu;  
+}
+
+
+void Grille::afficherPlateau(){
+    for (int i = 0; i < ligne; i++) {
+        for (int j = 0; j < col; j++) {
+            std::cout << plateauJeu[i][j]->getStatus() << " "; 
+        }
+        std::cout << std::endl;
+    }
+    std::cout<<std::endl;
+}
+
+int Grille::Voisin(int i, int j){
+  int voisinsEnVie = 0;
+
+    if (i > 0)
+    {
+        voisinsEnVie += plateauJeu[i - 1][j]->getStatus();
+
+        if (j > 0)
+        {
+            voisinsEnVie += plateauJeu[i - 1][j - 1]->getStatus();
+        }
+        if (j < (ligne - 1))
+        {
+            voisinsEnVie += plateauJeu[i - 1][j + 1]->getStatus();
+        }
+    }
+
+    if (i < (ligne - 1))
+    {
+        voisinsEnVie += plateauJeu[i + 1][j]->getStatus();
+
+        if (j > 0)
+        {
+            voisinsEnVie += plateauJeu[i + 1][j - 1]->getStatus();
+        }
+        if (j < (col - 1))
+        {
+            voisinsEnVie += plateauJeu[i + 1][j + 1]->getStatus();
+        }
+    }
+
+    if (j > 0)
+    {
+        voisinsEnVie += plateauJeu[i][j - 1]->getStatus();
+    }
+
+    if (j < (col - 1))
+    {
+        voisinsEnVie += plateauJeu[i][j + 1]->getStatus();
+    }
+
+    return voisinsEnVie;
+}
+
+void Grille::compterVoisine(){
+  for (int i=0; i< ligne; i++){
+    for (int j=0; j<col; j++){
+        plateauJeu[i][j]->setNbrVoisins(Voisin(i,j));
+    }
+  }
+
+}
+
+void Grille::afficherPlateauVoisins(){
+    for (int i = 0; i < ligne; i++) {
+        for (int j = 0; j < col; j++) {
+            std::cout << plateauJeu[i][j]->getNbrVoisins() << " "; 
+        }
+        std::cout << std::endl;
+    }
+    std::cout<<std::endl;
+}
+void Grille::setEtats(bool** Etats){
+  for (int i = 0; i < ligne; i++) {
+        for (int j = 0; j < col; j++) {
+            plateauJeu[i][j]->setStatus(Etats[i][j]); 
+        }
+    }
+}
+
+
+void Grille::jouerTour(){
+for (int i=0; i< ligne; i++){
+    for (int j=0; j<col; j++){
+      if(plateauJeu[i][j]->getNbrVoisins()>=3) {
+        //std::cout<< i << " " << j << " vivante" << std::endl;
+        plateauJeu[i][j]->setStatus(1);
+        //std::cout<<plateauJeu[i][j]->getNbrVoisins()<<std::endl;
+
+        }
+      else {
+        plateauJeu[i][j]->setStatus(0);
+        //std::cout<< i << " " << j << " morte" << std::endl;
+
+        //std::cout<<plateauJeu[i][j]->getNbrVoisins()<<std::endl;
+
+        }
+    }
+  }
+}
