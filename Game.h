@@ -9,7 +9,7 @@ public:
     bool** pJeu;
     std::string sourceJeu;
 
-    int ligne,col, tourActuel,tourMax;
+    int ligne,col, tourActuel= 1,tourMax = 10;
 
     Game()=default;
 

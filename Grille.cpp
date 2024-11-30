@@ -81,8 +81,10 @@ void Grille::compterVoisine(){
   for (int i=0; i< ligne; i++){
     for (int j=0; j<col; j++){
         plateauJeu[i][j]->setNbrVoisins(Voisin(i,j));
+
     }
   }
+  //afficherPlateauVoisins();
 
 }
 
@@ -103,23 +105,25 @@ void Grille::setEtats(bool** Etats){
     }
 }
 
-
-void Grille::jouerTour(){
-for (int i=0; i< ligne; i++){
-    for (int j=0; j<col; j++){
-      if(plateauJeu[i][j]->getNbrVoisins()>=3) {
-        //std::cout<< i << " " << j << " vivante" << std::endl;
-        plateauJeu[i][j]->setStatus(1);
-        //std::cout<<plateauJeu[i][j]->getNbrVoisins()<<std::endl;
-
-        }
-      else {
-        plateauJeu[i][j]->setStatus(0);
-        //std::cout<< i << " " << j << " morte" << std::endl;
-
-        //std::cout<<plateauJeu[i][j]->getNbrVoisins()<<std::endl;
-
+void Grille::jouerTour() {
+    bool** nouveauEtat = new bool*[ligne];
+    for (int i = 0; i < ligne; ++i) {
+        nouveauEtat[i] = new bool[col];
+        for (int j = 0; j < col; ++j) {
+            int voisins = plateauJeu[i][j]->getNbrVoisins();
+            if (plateauJeu[i][j]->getStatus()) { 
+                nouveauEtat[i][j] = (voisins == 2 || voisins == 3);
+            } else { 
+                nouveauEtat[i][j] = (voisins == 3);
+            }
         }
     }
-  }
+
+    for (int i = 0; i < ligne; ++i) {
+        for (int j = 0; j < col; ++j) {
+            plateauJeu[i][j]->setStatus(nouveauEtat[i][j]);
+        }
+        delete[] nouveauEtat[i];
+    }
+    delete[] nouveauEtat;
 }

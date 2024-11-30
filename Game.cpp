@@ -7,25 +7,29 @@ Game::Game(std::string sourceJeu){
 
     LireFichierprocessFile();
     plateau = new Grille(ligne,col);
-    plateau->afficherPlateau();
+    plateau->setEtats(pJeu);
+    //plateau->afficherPlateau();
+
     Jouer();
     
 }
 
 void Game::Jouer(){
-    plateau->setEtats(pJeu);
+    while(tourActuel < tourMax){
+        plateau->afficherPlateau();
 
-    plateau->afficherPlateau();
+        plateau->compterVoisine();
+        //plateau->afficherPlateauVoisins();
 
-    plateau->compterVoisine();
-    //plateau->afficherPlateauVoisins();
-
-    plateau->jouerTour();
+        plateau->jouerTour();
 
 
-    //plateau->setEtats(pJeu);
-    plateau->afficherPlateau();
+        //plateau->setEtats(pJeu);
+        //plateau->afficherPlateau();
+        tourActuel++;
 
+    }
+    
     //plateau->afficherPlateauVoisins();
 
 }

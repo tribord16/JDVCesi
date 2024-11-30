@@ -12,10 +12,10 @@ public:
     Cellule();
     Cellule(bool etat);
 
-    bool getStatus() const;
+    bool getStatus();
     void setStatus(bool status);
 
-    int getNbrVoisins() const;
+    int getNbrVoisins() ;
     void setNbrVoisins(int nbrVoisins);
 
 };
