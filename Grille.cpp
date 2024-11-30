@@ -1,14 +1,16 @@
 #include "Grille.h"
 
 
-Grille::Grille(int x, int y) : ligne(x), col(y) {
+Grille::Grille(int x, int y, bool pause) : ligne(x), col(y), enPause(pause){
     
     plateauJeu.resize(ligne, std::vector<Cellule>(col));
-
 }
 
 
-
+void Grille::mettreEnPause(){
+    enPause = !enPause;
+    std::cout<<"cc:"<<enPause<<std::endl;
+}
 
 void Grille::afficherPlateau(){
     for (int i = 0; i < ligne; i++) {
@@ -108,3 +110,51 @@ void Grille::jouerTour() {
     setEtats(nouveauEtat);
 
 }
+
+
+GrilleGraphique::GrilleGraphique(int x, int y, int tailleCellule) : Grille(x,y), tailleCellule(tailleCellule) {
+    largeurFenetre = col * tailleCellule;
+    hauteurFenetre = ligne * tailleCellule;
+
+    window.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Jeu de la vie");
+
+}
+
+void GrilleGraphique::afficher(){
+    window.clear();
+
+    for (int i = 0; i < ligne; i++){
+        for(int j =0; j < col; j++){
+            bool vivant = plateauJeu[i][j].getStatus();
+            afficherCellule(i, j, vivant);
+        }
+    }
+    window.display();
+}
+
+void GrilleGraphique::afficherCellule(int x, int y, bool vivant){
+    sf::RectangleShape cellule(sf::Vector2f(tailleCellule,tailleCellule));
+    cellule.setPosition(x*tailleCellule, y*tailleCellule);
+
+    if(vivant) cellule.setFillColor(sf::Color::Blue);
+    else cellule.setFillColor(sf::Color::Black);
+
+    window.draw(cellule);
+
+
+
+}
+
+void GrilleGraphique::update(){
+    afficher(); 
+}
+
+
+void GrilleGraphique::interaction(){
+    sf::Event event;
+    while (window.pollEvent(event)){
+        if(event.type == sf::Event::Closed) window.close();
+        if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::P) {mettreEnPause();}
+    }
+}
+

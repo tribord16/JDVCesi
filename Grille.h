@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
+#include <SFML/Graphics.hpp>
 #include <vector>
 class Grille {
     
@@ -12,8 +12,10 @@ public:
     std::vector<std::vector<Cellule>> plateauJeu;
     //Cellule*** plateauJeu;
     int ligne,col;
+    bool enPause;
     Grille()=default;
-    Grille(int x, int y);
+    virtual ~Grille() {}
+    Grille(int x, int y, bool pause=false);
 
 
     void afficherPlateau() ; //inisialiser
@@ -23,7 +25,22 @@ public:
     void afficherPlateauVoisins();
     void setEtats(const std::vector<std::vector<bool>>&Etats);
     void jouerTour();
+    void mettreEnPause();
 
+    bool isEnPause() const {return enPause;}
+};
 
+class GrilleGraphique : public Grille {
+public:
+    sf::RenderWindow window;
+    int tailleCellule, hauteurFenetre,largeurFenetre;
+    GrilleGraphique(int x, int y, int tailleCellule = 20);
+
+    sf::Clock clock;
+
+    void afficher();
+    void update();
+    void afficherCellule(int i, int j, bool vivant);
+    void interaction();
 
 };
