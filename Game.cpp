@@ -2,7 +2,7 @@
 #include "Grille.h"
 
 
-Game::Game(std::string sourceJeu, int maxTours) : sourceJeu(sourceJeu), tourMax(maxTours),tourActuel(1), plateau(0,0){
+Game::Game(std::string sourceJeu, bool graphique, int maxTours) : modeGraphique(graphique),sourceJeu(sourceJeu), tourMax(maxTours),tourActuel(1){
     chargerFichier();
     
 }
@@ -10,17 +10,36 @@ Game::Game(std::string sourceJeu, int maxTours) : sourceJeu(sourceJeu), tourMax(
 void Game::Jouer(){
     tourActuel = 1;
     while(tourActuel < tourMax){
-        plateau.afficherPlateau();
+        //plateau.update();
+        if(modeGraphique){
+            while(dynamic_cast<GrilleGraphique*>(plateau)->isEnPause()){
+                dynamic_cast<GrilleGraphique*>(plateau)->interaction();
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+            dynamic_cast<GrilleGraphique*>(plateau)->interaction();
+            dynamic_cast<GrilleGraphique*>(plateau)->update();
 
-        plateau.compterVoisine();
+            std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int> (0.5 * 1000)));
+            
+
+        }
+        else {
+            std::cout << "Tour " << tourActuel << std::endl;
+            plateau->afficherPlateau();
+        }
+
+        plateau->compterVoisine();
         //plateau->afficherPlateauVoisins();
 
-        plateau.jouerTour();
+        plateau->jouerTour();
 
 
         //plateau->setEtats(pJeu);
         //plateau->afficherPlateau();
+        //std::cout<<tourActuel<<std::endl;
         tourActuel++;
+        
+        //std::cout<<tourMax<<std::endl;
     }
 
     //plateau->afficherPlateauVoisins();
@@ -54,8 +73,10 @@ void Game::chargerFichier(/*const std::string& source*/){
         col = std::stoi(temp);
 
     }
-   
-    plateau = Grille(ligne, col);
+    if(modeGraphique) plateau = new GrilleGraphique(ligne, col);
+    else plateau = new Grille(ligne,col);
+
+    
 
     std::vector<std::vector<bool>> pJeu (ligne, std::vector<bool> (col));
         
@@ -75,10 +96,9 @@ void Game::chargerFichier(/*const std::string& source*/){
 
     }
         
-    plateau.setEtats(pJeu);
+    plateau->setEtats(pJeu);
     
-            
-
     
 }
+Game::~Game(){delete plateau;}
 

@@ -9,6 +9,7 @@ private:
     int nbrVoisins;
     bool isObstacle;
 
+
 public:
     Cellule();
     Cellule(bool etat);

@@ -1,20 +1,22 @@
 #pragma once
 
 #include "Grille.h"
-
+#include <thread>
+#include <chrono>
 
 class Game {
 public:
-    Grille plateau;
+    Grille* plateau;
     std::string sourceJeu;
 
     int tourActuel,tourMax;
 
+    bool modeGraphique;
     Game()=default;
-
-    Game(std::string sourceJeu, int maxTours = 10);
+    ~Game();
+    Game(std::string sourceJeu, bool graphique = false, int maxTours = 12);
     void chargerFichier(/*const std::string& string*/);
-    
+
 
     void Jouer();
 };

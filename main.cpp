@@ -6,7 +6,14 @@ int main(){
 
     std::cout << "Entrez le fichier source : ";
     std::cin >> source;
-    Game game(source);
+    bool modeGraphique = true;
+
+
+    Game game(source,modeGraphique);
     game.Jouer();
+    
+    
+    
+
     return 0;
 }
