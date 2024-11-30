@@ -5,20 +5,21 @@
 #include <string>
 #include <fstream>
 class Grille {
+    
 public:
-    Cellule*** plateauJeu;
+    std::vector<std::vector<Cellule>> plateauJeu;
+    //Cellule*** plateauJeu;
     int ligne,col;
     Grille()=default;
     Grille(int x, int y);
     ~Grille();
 
-    void afficherPlateau();
+    void afficherPlateau(); //inisialiser
+    int Voisin(int i, int j);
     void compterVoisine();
 
     void afficherPlateauVoisins();
-    void setEtats(bool** Etats);
-
-    int Voisin(int i, int j);
+    void setEtats(const std::vector<bool>>Etats);
     void jouerTour();
 
 

@@ -7,6 +7,7 @@ class Cellule {
 private:
     bool status;
     int nbrVoisins;
+    bool isObstacle;
 
 public:
     Cellule();
@@ -14,6 +15,8 @@ public:
 
     bool getStatus();
     void setStatus(bool status);
+    bool getisObstacle();
+    void setisObstacle();
 
     int getNbrVoisins() ;
     void setNbrVoisins(int nbrVoisins);
