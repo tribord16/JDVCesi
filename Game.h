@@ -5,16 +5,15 @@
 
 class Game {
 public:
-    Grille* plateau;
-    bool** pJeu;
+    Grille plateau;
     std::string sourceJeu;
 
-    int ligne,col, tourActuel= 1,tourMax = 10;
+    int tourActuel,tourMax;
 
     Game()=default;
 
-    Game(std::string sourceJeu);
-    void LireFichierprocessFile(/*const std::string& string*/);
+    Game(std::string sourceJeu, int maxTours = 10);
+    void chargerFichier(/*const std::string& string*/);
     
 
     void Jouer();

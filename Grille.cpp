@@ -2,26 +2,12 @@
 
 
 Grille::Grille(int x, int y) : ligne(x), col(y) {
-    plateauJeu = new Cellule**[ligne];  
-    for (int i = 0; i < ligne; i++) {
-        plateauJeu[i] = new Cellule*[col];
-        for (int j = 0; j < col; j++) {
-            plateauJeu[i][j] = new Cellule();
-            
-        }
-    }
+    
+    plateauJeu.resize(ligne, std::vector<Cellule>(col));
 
 }
 
-Grille::~Grille() {
-    for (int i = 0; i < ligne; i++) {
-        for (int j = 0; j < col; j++) {
-            delete plateauJeu[i][j];  
-        }
-        delete[] plateauJeu[i]; 
-    }
-    delete[] plateauJeu;  
-}
+
 
 
 void Grille::afficherPlateau(){
@@ -81,7 +67,7 @@ int Grille::Voisin(int i, int j){
 void Grille::compterVoisine(){
   for (int i=0; i< ligne; i++){
     for (int j=0; j<col; j++){
-        plateauJeu[i][j]->setNbrVoisins(Voisin(i,j));
+        plateauJeu[i][j].setNbrVoisins(Voisin(i,j));
 
     }
   }
@@ -98,7 +84,7 @@ void Grille::afficherPlateauVoisins(){
     }
     std::cout<<std::endl;
 }
-void Grille::setEtats(bool** Etats){
+void Grille::setEtats(const std::vector<std::vector<bool>>&Etats){
   for (int i = 0; i < ligne; i++) {
         for (int j = 0; j < col; j++) {
             plateauJeu[i][j].setStatus(Etats[i][j]); 
@@ -107,9 +93,8 @@ void Grille::setEtats(bool** Etats){
 }
 
 void Grille::jouerTour() {
-    bool** nouveauEtat = new bool*[ligne];
+    std::vector<std::vector<bool>> nouveauEtat(ligne, std::vector<bool>(col));
     for (int i = 0; i < ligne; ++i) {
-        nouveauEtat[i] = new bool[col];
         for (int j = 0; j < col; ++j) {
             int voisins = plateauJeu[i][j].getNbrVoisins();
             if (plateauJeu[i][j].getStatus()) { 
@@ -120,11 +105,6 @@ void Grille::jouerTour() {
         }
     }
 
-    for (int i = 0; i < ligne; ++i) {
-        for (int j = 0; j < col; ++j) {
-            plateauJeu[i][j].setStatus(nouveauEtat[i][j]);
-        }
-        delete[] nouveauEtat[i];
-    }
-    delete[] nouveauEtat;
+    setEtats(nouveauEtat);
+
 }

@@ -13,10 +13,11 @@ public:
     Cellule();
     Cellule(bool etat);
 
-    bool getStatus();
+    bool getStatus() ;
     void setStatus(bool status);
-    bool getisObstacle();
-    void setisObstacle();
+
+    bool getisObstacle() ;
+    void setisObstacle(bool isObstacle);
 
     int getNbrVoisins() ;
     void setNbrVoisins(int nbrVoisins);

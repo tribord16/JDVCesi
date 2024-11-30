@@ -18,5 +18,5 @@ void Cellule::setNbrVoisins(int nbrVoisins) {
 
 bool Cellule::getisObstacle(){return isObstacle;}
 void Cellule::setisObstacle(bool isObstacle) {
-    this -> isObstacle = isobstale;
+    this -> isObstacle = isObstacle;
 }

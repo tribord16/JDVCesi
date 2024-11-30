@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+
+#include <vector>
 class Grille {
     
 public:
@@ -12,14 +14,14 @@ public:
     int ligne,col;
     Grille()=default;
     Grille(int x, int y);
-    ~Grille();
 
-    void afficherPlateau(); //inisialiser
-    int Voisin(int i, int j);
+
+    void afficherPlateau() ; //inisialiser
+    int Voisin(int i, int j) ;
     void compterVoisine();
 
     void afficherPlateauVoisins();
-    void setEtats(const std::vector<bool>>Etats);
+    void setEtats(const std::vector<std::vector<bool>>&Etats);
     void jouerTour();
 
 
