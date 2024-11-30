@@ -2,31 +2,18 @@
 
 
 Grille::Grille(int x, int y) : ligne(x), col(y) {
-    plateauJeu = new Cellule**[ligne];  
-    for (int i = 0; i < ligne; i++) {
-        plateauJeu[i] = new Cellule*[col];
-        for (int j = 0; j < col; j++) {
-            plateauJeu[i][j] = new Cellule();  
-        }
-    }
+    
+    plateauJeu.resize(ligne, std::vector<Cellule>(col));
 
 }
 
-Grille::~Grille() {
-    for (int i = 0; i < ligne; i++) {
-        for (int j = 0; j < col; j++) {
-            delete plateauJeu[i][j];  
-        }
-        delete[] plateauJeu[i]; 
-    }
-    delete[] plateauJeu;  
-}
+
 
 
 void Grille::afficherPlateau(){
     for (int i = 0; i < ligne; i++) {
         for (int j = 0; j < col; j++) {
-            std::cout << plateauJeu[i][j]->getStatus() << " "; 
+            std::cout << plateauJeu[i][j].getStatus() << " "; 
         }
         std::cout << std::endl;
     }
@@ -38,40 +25,40 @@ int Grille::Voisin(int i, int j){
 
     if (i > 0)
     {
-        voisinsEnVie += plateauJeu[i - 1][j]->getStatus();
+        voisinsEnVie += plateauJeu[i - 1][j].getStatus();
 
         if (j > 0)
         {
-            voisinsEnVie += plateauJeu[i - 1][j - 1]->getStatus();
+            voisinsEnVie += plateauJeu[i - 1][j - 1].getStatus();
         }
         if (j < (ligne - 1))
         {
-            voisinsEnVie += plateauJeu[i - 1][j + 1]->getStatus();
+            voisinsEnVie += plateauJeu[i - 1][j + 1].getStatus();
         }
     }
 
     if (i < (ligne - 1))
     {
-        voisinsEnVie += plateauJeu[i + 1][j]->getStatus();
+        voisinsEnVie += plateauJeu[i + 1][j].getStatus();
 
         if (j > 0)
         {
-            voisinsEnVie += plateauJeu[i + 1][j - 1]->getStatus();
+            voisinsEnVie += plateauJeu[i + 1][j - 1].getStatus();
         }
         if (j < (col - 1))
         {
-            voisinsEnVie += plateauJeu[i + 1][j + 1]->getStatus();
+            voisinsEnVie += plateauJeu[i + 1][j + 1].getStatus();
         }
     }
 
     if (j > 0)
     {
-        voisinsEnVie += plateauJeu[i][j - 1]->getStatus();
+        voisinsEnVie += plateauJeu[i][j - 1].getStatus();
     }
 
     if (j < (col - 1))
     {
-        voisinsEnVie += plateauJeu[i][j + 1]->getStatus();
+        voisinsEnVie += plateauJeu[i][j + 1].getStatus();
     }
 
     return voisinsEnVie;
@@ -80,7 +67,7 @@ int Grille::Voisin(int i, int j){
 void Grille::compterVoisine(){
   for (int i=0; i< ligne; i++){
     for (int j=0; j<col; j++){
-        plateauJeu[i][j]->setNbrVoisins(Voisin(i,j));
+        plateauJeu[i][j].setNbrVoisins(Voisin(i,j));
 
     }
   }
@@ -91,27 +78,26 @@ void Grille::compterVoisine(){
 void Grille::afficherPlateauVoisins(){
     for (int i = 0; i < ligne; i++) {
         for (int j = 0; j < col; j++) {
-            std::cout << plateauJeu[i][j]->getNbrVoisins() << " "; 
+            std::cout << plateauJeu[i][j].getNbrVoisins() << " "; 
         }
         std::cout << std::endl;
     }
     std::cout<<std::endl;
 }
-void Grille::setEtats(bool** Etats){
+void Grille::setEtats(const std::vector<std::vector<bool>>&Etats){
   for (int i = 0; i < ligne; i++) {
         for (int j = 0; j < col; j++) {
-            plateauJeu[i][j]->setStatus(Etats[i][j]); 
+            plateauJeu[i][j].setStatus(Etats[i][j]); 
         }
     }
 }
 
 void Grille::jouerTour() {
-    bool** nouveauEtat = new bool*[ligne];
+    std::vector<std::vector<bool>> nouveauEtat(ligne, std::vector<bool>(col));
     for (int i = 0; i < ligne; ++i) {
-        nouveauEtat[i] = new bool[col];
         for (int j = 0; j < col; ++j) {
-            int voisins = plateauJeu[i][j]->getNbrVoisins();
-            if (plateauJeu[i][j]->getStatus()) { 
+            int voisins = plateauJeu[i][j].getNbrVoisins();
+            if (plateauJeu[i][j].getStatus()) { 
                 nouveauEtat[i][j] = (voisins == 2 || voisins == 3);
             } else { 
                 nouveauEtat[i][j] = (voisins == 3);
@@ -119,11 +105,6 @@ void Grille::jouerTour() {
         }
     }
 
-    for (int i = 0; i < ligne; ++i) {
-        for (int j = 0; j < col; ++j) {
-            plateauJeu[i][j]->setStatus(nouveauEtat[i][j]);
-        }
-        delete[] nouveauEtat[i];
-    }
-    delete[] nouveauEtat;
+    setEtats(nouveauEtat);
+
 }
