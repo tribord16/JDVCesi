@@ -6,7 +6,8 @@ Grille::Grille(int x, int y) : ligne(x), col(y) {
     for (int i = 0; i < ligne; i++) {
         plateauJeu[i] = new Cellule*[col];
         for (int j = 0; j < col; j++) {
-            plateauJeu[i][j] = new Cellule();  
+            plateauJeu[i][j] = new Cellule();
+            std::cout<<"bonjour"<<std::endl; 
         }
     }
 
