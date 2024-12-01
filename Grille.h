@@ -12,7 +12,7 @@ public:
     std::vector<std::vector<Cellule>> plateauJeu;
     //Cellule*** plateauJeu;
     int ligne,col;
-    bool enPause, jeuEnCours;
+    bool enPause, jeuEnCours, sauvegarder;
     Grille()=default;
     virtual ~Grille() {}
     Grille(int x, int y, bool pause=false);

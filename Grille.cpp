@@ -1,7 +1,7 @@
 #include "Grille.h"
 
 
-Grille::Grille(int x, int y, bool pause) : ligne(x), col(y), enPause(pause), jeuEnCours(true){
+Grille::Grille(int x, int y, bool pause) : ligne(x), col(y), enPause(pause), sauvegarder(false), jeuEnCours(true){
     
     plateauJeu.resize(ligne, std::vector<Cellule>(col));
 }
@@ -187,7 +187,7 @@ void GrilleGraphique::interaction(){
         } 
             
         if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::P) {mettreEnPause();}
-        
+        if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S) {sauvegarder=true;}
     }
 }
 

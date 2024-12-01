@@ -13,7 +13,17 @@ void Game::Jouer(){
         //plateau.update();
         if(modeGraphique){
             if(!dynamic_cast<GrilleGraphique*>(plateau)->jeuEnCours) break;
+            
+            
             while(dynamic_cast<GrilleGraphique*>(plateau)->isEnPause()){
+                if(dynamic_cast<GrilleGraphique*>(plateau)->sauvegarder) {
+                    std::string fichierSauvegarde;
+                    std::cout << "Entrer un nom de sauvegarde " ;
+                    std::cin >> fichierSauvegarde;
+                    sauvegarderEtat(fichierSauvegarde);
+                    dynamic_cast<GrilleGraphique*>(plateau)->sauvegarder=false;
+                    break;
+                };
                dynamic_cast<GrilleGraphique*>(plateau)->interaction();
                
                 dynamic_cast<GrilleGraphique*>(plateau)->afficherMenu();
@@ -112,7 +122,7 @@ void Game::sauvegarderEtat(const std::string& fichierSortie){
         std::cerr << "Erreur decriture: impossible d'ouvrir le fichier.\n";
         return;
     }
-
+    outFile << "touractuel: " << tourActuel << "\n";
     outFile << plateau->ligne << " " << plateau -> col << std ::endl;
     for (int i = 0; i < plateau->ligne; i++){
         for(int j = 0; j < plateau->col; j++){
