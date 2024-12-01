@@ -1,5 +1,5 @@
 #pragma once
-
+#include "GrilleGraphique.h"
 #include "Grille.h"
 #include <thread>
 #include <chrono>
@@ -17,6 +17,7 @@ public:
     Game(std::string sourceJeu, bool graphique = false, int maxTours = 12);
     void chargerFichier(/*const std::string& string*/);
     void sauvegarderEtat(const std::string& fichierSortie);
+    void sauvegardeFichier(GrilleGraphique* g);
 
     void Jouer();
 };
