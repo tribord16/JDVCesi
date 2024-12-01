@@ -12,8 +12,11 @@ void Game::Jouer(){
     while(tourActuel < tourMax){
         //plateau.update();
         if(modeGraphique){
+            if(!dynamic_cast<GrilleGraphique*>(plateau)->jeuEnCours) break;
             while(dynamic_cast<GrilleGraphique*>(plateau)->isEnPause()){
-                dynamic_cast<GrilleGraphique*>(plateau)->interaction();
+               dynamic_cast<GrilleGraphique*>(plateau)->interaction();
+               
+                dynamic_cast<GrilleGraphique*>(plateau)->afficherMenu();
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
             dynamic_cast<GrilleGraphique*>(plateau)->interaction();
@@ -51,6 +54,7 @@ void Game::chargerFichier(/*const std::string& source*/){
     std::ifstream inFile(sourceJeu);
     if (!inFile) {
         std::cerr << "Erreur : impossible d'ouvrir le fichier.\n";
+        return;
         
     }
 
@@ -102,3 +106,19 @@ void Game::chargerFichier(/*const std::string& source*/){
 }
 Game::~Game(){delete plateau;}
 
+void Game::sauvegarderEtat(const std::string& fichierSortie){
+    std::ofstream outFile(fichierSortie);
+    if(!outFile){
+        std::cerr << "Erreur decriture: impossible d'ouvrir le fichier.\n";
+        return;
+    }
+
+    outFile << plateau->ligne << " " << plateau -> col << std ::endl;
+    for (int i = 0; i < plateau->ligne; i++){
+        for(int j = 0; j < plateau->col; j++){
+            outFile <<(plateau->plateauJeu[i][j].getStatus() ? "1" : "0") << " ";
+        }
+        outFile << std::endl;
+    }
+    std::cout<< "Jeu sauvegarde dans " << fichierSortie << std::endl;
+}   

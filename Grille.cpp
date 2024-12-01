@@ -1,7 +1,7 @@
 #include "Grille.h"
 
 
-Grille::Grille(int x, int y, bool pause) : ligne(x), col(y), enPause(pause){
+Grille::Grille(int x, int y, bool pause) : ligne(x), col(y), enPause(pause), jeuEnCours(true){
     
     plateauJeu.resize(ligne, std::vector<Cellule>(col));
 }
@@ -9,7 +9,6 @@ Grille::Grille(int x, int y, bool pause) : ligne(x), col(y), enPause(pause){
 
 void Grille::mettreEnPause(){
     enPause = !enPause;
-    std::cout<<"cc:"<<enPause<<std::endl;
 }
 
 void Grille::afficherPlateau(){
@@ -120,6 +119,20 @@ GrilleGraphique::GrilleGraphique(int x, int y, int tailleCellule) : Grille(x,y),
 
 }
 
+void GrilleGraphique::afficherMenu(){
+    sf::Font font;
+    if (!font.loadFromFile("Arial.ttf")) {
+        std::cerr << "Erreur de chargement de la police" << std::endl;
+        return;
+    }
+
+    sf::Text menu("Le menu de jeu", font, 30);
+    menu.setFillColor(sf::Color::Green);
+    menu.setPosition(largeurFenetre / 2 - menu.getLocalBounds().width / 2, hauteurFenetre / 4);
+    window.draw(menu);
+    
+    window.display();
+}
 void GrilleGraphique::afficher(){
     window.clear();
 
@@ -129,9 +142,22 @@ void GrilleGraphique::afficher(){
             afficherCellule(i, j, vivant);
         }
     }
+
     window.display();
 }
 
+
+/*void GrilleGraphique::gererMenu(){
+    interaction();
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+        std::string fichierSauvegarde;
+        std::cout << "Entrer un nom de sauvegarde " ;
+        std::cin >> fichierSauvegarde;
+        sauvegarderEtat(fichierSauvegarde);
+    }
+}
+*/
 void GrilleGraphique::afficherCellule(int x, int y, bool vivant){
     sf::RectangleShape cellule(sf::Vector2f(tailleCellule,tailleCellule));
     cellule.setPosition(x*tailleCellule, y*tailleCellule);
@@ -140,6 +166,7 @@ void GrilleGraphique::afficherCellule(int x, int y, bool vivant){
     else cellule.setFillColor(sf::Color::Black);
 
     window.draw(cellule);
+
 
 
 
@@ -153,8 +180,14 @@ void GrilleGraphique::update(){
 void GrilleGraphique::interaction(){
     sf::Event event;
     while (window.pollEvent(event)){
-        if(event.type == sf::Event::Closed) window.close();
+        if(event.type == sf::Event::Closed){
+            window.close();
+            enPause = jeuEnCours = false;
+            break;
+        } 
+            
         if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::P) {mettreEnPause();}
+        
     }
 }
 

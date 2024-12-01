@@ -12,7 +12,7 @@ public:
     std::vector<std::vector<Cellule>> plateauJeu;
     //Cellule*** plateauJeu;
     int ligne,col;
-    bool enPause;
+    bool enPause, jeuEnCours;
     Grille()=default;
     virtual ~Grille() {}
     Grille(int x, int y, bool pause=false);
@@ -26,7 +26,6 @@ public:
     void setEtats(const std::vector<std::vector<bool>>&Etats);
     void jouerTour();
     void mettreEnPause();
-
     bool isEnPause() const {return enPause;}
 };
 
@@ -34,13 +33,16 @@ class GrilleGraphique : public Grille {
 public:
     sf::RenderWindow window;
     int tailleCellule, hauteurFenetre,largeurFenetre;
-    GrilleGraphique(int x, int y, int tailleCellule = 20);
+    GrilleGraphique(int x, int y, int tailleCellule = 80);
 
     sf::Clock clock;
 
     void afficher();
     void update();
     void afficherCellule(int i, int j, bool vivant);
+    void afficherMenu();
+    void gererMenu();
     void interaction();
+    
 
 };
