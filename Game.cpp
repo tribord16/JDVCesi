@@ -1,36 +1,33 @@
 #include "Game.h"
 #include "Grille.h"
-
+#include "GrilleGraphique.h"
 
 Game::Game(std::string sourceJeu, bool graphique, int maxTours) : modeGraphique(graphique),sourceJeu(sourceJeu), tourMax(maxTours),tourActuel(1){
-    chargerFichier();
-    
+    chargerFichier();   
 }
 
 void Game::Jouer(){
     tourActuel = 1;
     while(tourActuel < tourMax){
+        GrilleGraphique* grilleGraphique = dynamic_cast<GrilleGraphique*>(plateau);
         //plateau.update();
         if(modeGraphique){
-            if(!dynamic_cast<GrilleGraphique*>(plateau)->jeuEnCours) break;
+            if(!grilleGraphique->jeuEnCours) break;
             
             
-            while(dynamic_cast<GrilleGraphique*>(plateau)->isEnPause()){
+            while(grilleGraphique->isEnPause()){
                 if(dynamic_cast<GrilleGraphique*>(plateau)->sauvegarder) {
-                    std::string fichierSauvegarde;
-                    std::cout << "Entrer un nom de sauvegarde " ;
-                    std::cin >> fichierSauvegarde;
-                    sauvegarderEtat(fichierSauvegarde);
-                    dynamic_cast<GrilleGraphique*>(plateau)->sauvegarder=false;
+                    sauvegardeFichier(grilleGraphique);
                     break;
-                };
-               dynamic_cast<GrilleGraphique*>(plateau)->interaction();
+                   
+                }   
+                grilleGraphique->interaction();
                
-                dynamic_cast<GrilleGraphique*>(plateau)->afficherMenu();
+                grilleGraphique->afficherMenu();
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
-            dynamic_cast<GrilleGraphique*>(plateau)->interaction();
-            dynamic_cast<GrilleGraphique*>(plateau)->update();
+            grilleGraphique->interaction();
+            grilleGraphique->update();
 
             std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int> (0.5 * 1000)));
             
@@ -42,23 +39,10 @@ void Game::Jouer(){
         }
 
         plateau->compterVoisine();
-        //plateau->afficherPlateauVoisins();
-
         plateau->jouerTour();
-
-
-        //plateau->setEtats(pJeu);
-        //plateau->afficherPlateau();
-        //std::cout<<tourActuel<<std::endl;
         tourActuel++;
-        
-        //std::cout<<tourMax<<std::endl;
     }
-
-    //plateau->afficherPlateauVoisins();
-
 }
-
 void Game::chargerFichier(/*const std::string& source*/){
 
     std::ifstream inFile(sourceJeu);
@@ -89,11 +73,7 @@ void Game::chargerFichier(/*const std::string& source*/){
     }
     if(modeGraphique) plateau = new GrilleGraphique(ligne, col);
     else plateau = new Grille(ligne,col);
-
-    
-
     std::vector<std::vector<bool>> pJeu (ligne, std::vector<bool> (col));
-        
 
     for(int j = 0; j < ligne;j++){
         if(getline(inFile,line)){
@@ -102,17 +82,11 @@ void Game::chargerFichier(/*const std::string& source*/){
                 if(line[i]!=' '){
                     if(line[i]=='0') {pJeu[j][ct] = 0; ct++;}
                     else if(line[i]=='1') {pJeu[j][ct] = 1; ct++;}
-                    
-
                 }
             }
         }
-
-    }
-        
-    plateau->setEtats(pJeu);
-    
-    
+    }    
+    plateau->setEtats(pJeu);    
 }
 Game::~Game(){delete plateau;}
 
@@ -131,4 +105,12 @@ void Game::sauvegarderEtat(const std::string& fichierSortie){
         outFile << std::endl;
     }
     std::cout<< "Jeu sauvegarde dans " << fichierSortie << std::endl;
-}   
+} 
+void Game::sauvegardeFichier(GrilleGraphique* g){
+    
+    std::string fichierSauvegarde;
+    std::cout << "Entrer un nom de sauvegarde " ;
+    std::cin >> fichierSauvegarde;
+    sauvegarderEtat(fichierSauvegarde);
+    g->enPause=g->jeuEnCours=g->sauvegarder=false;   
+}  
