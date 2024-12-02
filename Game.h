@@ -1,6 +1,6 @@
 #pragma once
-#include "GrilleGraphique.h"
 #include "Grille.h"
+#include "GrilleGraphique.h"
 #include <thread>
 #include <chrono>
 
