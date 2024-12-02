@@ -5,7 +5,6 @@
 Game::Game(std::string sourceJeu, bool graphique, int maxTours) : modeGraphique(graphique),sourceJeu(sourceJeu), tourMax(maxTours),tourActuel(1){
     chargerFichier();   
 }
-
 void Game::Jouer(){
     tourActuel = 1;
     while(tourActuel < tourMax){
@@ -100,7 +99,9 @@ void Game::sauvegarderEtat(const std::string& fichierSortie){
     outFile << plateau->ligne << " " << plateau -> col << std ::endl;
     for (int i = 0; i < plateau->ligne; i++){
         for(int j = 0; j < plateau->col; j++){
-            outFile <<(plateau->plateauJeu[i][j].getStatus() ? "1" : "0") << " ";
+            int index = i * plateau->col + j;
+            outFile << (plateau->plateauJeu[index].getStatus() ? "1" : "0") << " "; 
+            //outFile <<(plateau->plateauJeu[i][j].getStatus() ? "1" : "0") << " ";
         }
         outFile << std::endl;
     }
