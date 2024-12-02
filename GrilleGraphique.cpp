@@ -31,7 +31,8 @@ void GrilleGraphique::afficher(){
 
     for (int i = 0; i < ligne; i++){
         for(int j =0; j < col; j++){
-            bool vivant = plateauJeu[i][j].getStatus();
+            bool vivant = plateauJeu[index(i, j)].getStatus();
+            //bool vivant = plateauJeu[i][j].getStatus();
             afficherCellule(i, j, vivant);
         }
     }
